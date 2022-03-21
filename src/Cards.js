@@ -1,13 +1,13 @@
 import Card from "./Card";
 
-const Cards = ( {cards, setFaveToAdd}) => {
+const Cards = ( {cards, setFaveToAdd, setFaveToRemove}) => {
 
 
     return (
         <div className={'flex-container'}>
 
-            {cards.map((card) => {
-                return <Card pokemon={card} setFaveToAdd={setFaveToAdd}/>
+            {cards.map((card, i) => {
+                return <Card key={i} pokemon={card} setFaveToAdd={setFaveToAdd} setFaveToRemove={setFaveToRemove}/>
             })}
         </div>
 

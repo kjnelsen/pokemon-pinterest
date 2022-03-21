@@ -1,10 +1,10 @@
 import Cards from "./Cards";
 
-const GalleryView = ({pokemonArr, setFaveToAdd}) => {
+const GalleryView = ({pokemonArr, setFaveToAdd, setFaveToRemove}) => {
 
     return (
         <div>
-        <Cards cards={pokemonArr} setFaveToAdd={setFaveToAdd}/>
+        <Cards cards={pokemonArr} setFaveToAdd={setFaveToAdd} setFaveToRemove={setFaveToRemove}/>
         </div>
     )
 };

@@ -1,17 +1,16 @@
 
-const Card = ({pokemon, setFaveToAdd, hide}) => {
+const Card = ({pokemon, setFaveToAdd, setFaveToRemove}) => {
 
     const clickDislike = () => {
-    console.log("clicked Dislike");
+    setFaveToRemove(pokemon);
 };
 
     const clickLike = () => {
-        console.log("clicked like");
         setFaveToAdd(pokemon);
     };
 
     return (
-        <div>
+        <div className={'card'}>
                 <img src={pokemon?.sprites.front_default} alt={''}/>
             <div>
                 <button onClick={clickDislike}>Dislike</button> <button onClick={clickLike}>Like</button>
