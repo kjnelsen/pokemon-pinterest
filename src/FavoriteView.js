@@ -1,9 +1,9 @@
 import Cards from "./Cards";
 
-const FavoriteView = ({pokemonArr}) => {
+const FavoriteView = ({pokemonArr, setFaveToAdd}) => {
 
     return (
-        <Cards cards={pokemonArr}/>
+        <Cards cards={pokemonArr} setFaveToAdd={setFaveToAdd}/>
     )
 };
 

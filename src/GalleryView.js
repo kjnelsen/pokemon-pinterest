@@ -1,9 +1,13 @@
 import Cards from "./Cards";
 
-const GalleryView = ({pokemonArr}) => {
+const GalleryView = ({pokemonArr, setFaveToAdd}) => {
 
     return (
-        <Cards cards={pokemonArr}/>
+        <div>
+        <Cards cards={pokemonArr.slice(0,3)} setFaveToAdd={setFaveToAdd}/>
+        <Cards cards={pokemonArr.slice(3,6)} setFaveToAdd={setFaveToAdd}/>
+        <Cards cards={pokemonArr.slice(6,9)} setFaveToAdd={setFaveToAdd}/>
+        </div>
     )
 };
 
