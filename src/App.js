@@ -27,7 +27,8 @@ function App() {
     useEffect(() => {
         async function fetchData() {
         for(let i = 1; i <= 9; i++) {
-            const response = await fetch('https://pokeapi.co/api/v2/pokemon/' + i);
+            const id = Math.ceil(Math.random() * 898);
+            const response = await fetch('https://pokeapi.co/api/v2/pokemon/' + id);
             const pokemonRaw = await response.text();
             const pokemonJson = JSON.parse(pokemonRaw);
             addPokemon(pokemonJson);
@@ -53,7 +54,20 @@ function App() {
         if(typeof faveToAdd === 'undefined')
             return;
         setFavoriteArr((favoriteArr) => [...favoriteArr, faveToAdd]);
+        let tempArr = pokemonArr;
+        tempArr.splice(tempArr.indexOf(faveToAdd), 1);
+        setPokemonArr(tempArr);
     }, [faveToAdd]);
+
+    const loadMore = async () => {
+        for(let i = 1; i <= 3; i++) {
+            const id = Math.ceil(Math.random() * 898);
+            const response = await fetch('https://pokeapi.co/api/v2/pokemon/' + id);
+            const pokemonRaw = await response.text();
+            const pokemonJson = JSON.parse(pokemonRaw);
+            addPokemon(pokemonJson);
+        }
+    };
 
   return (
     <div className="App">
@@ -61,6 +75,7 @@ function App() {
         <div>
             <RenderView/>
         </div>
+        <button onClick={loadMore}>Load More</button>
     </div>
 
   );

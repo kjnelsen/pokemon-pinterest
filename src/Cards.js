@@ -1,14 +1,14 @@
 import Card from "./Card";
-import {useState} from "react";
 
 const Cards = ( {cards, setFaveToAdd}) => {
 
 
     return (
-        <div>
-            <Card pokemon={cards[cards.length - 3]} setFaveToAdd={setFaveToAdd}/>
-            <Card pokemon={cards[cards.length - 2]} setFaveToAdd={setFaveToAdd}/>
-            <Card pokemon={cards[cards.length - 1]} setFaveToAdd={setFaveToAdd}/>
+        <div className={'flex-container'}>
+
+            {cards.map((card) => {
+                return <Card pokemon={card} setFaveToAdd={setFaveToAdd}/>
+            })}
         </div>
 
     )
