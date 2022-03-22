@@ -12,24 +12,29 @@ function App() {
     const [isFavorite, setIsFavorite] = useState(false);
     const [faveToAdd, setFaveToAdd] = useState();
     const [faveToRemove, setFaveToRemove] = useState();
+    const [prevCalled, setPrevCalled] = useState([]);
 
-    const addPokemon = (newPokemon) => {
-        setPokemonArr((pokemonArr) => [...pokemonArr, newPokemon]);
+    const burpArrays = () => {
+        setFavoriteArr((favoriteArr) => [...favoriteArr]);
+        setPokemonArr((pokemonArr) => [...pokemonArr]);
     };
-
 
     useEffect(() => {
         async function fetchData() {
-        for(let i = 1; i <= 9; i++) {
+            let prevArr = [...prevCalled];
+        for(let i = 1; i <= 15; i++) {
             const id = Math.ceil(Math.random() * 898);
+            if(prevArr.includes(id)) {
+                i--;
+                continue;
+            }
+            prevArr.push(id);
             const response = await fetch('https://pokeapi.co/api/v2/pokemon/' + id);
             const pokemonRaw = await response.text();
             const pokemonJson = JSON.parse(pokemonRaw);
-            if(!pokemonArr.includes(pokemonJson))
-                addPokemon(pokemonJson);
-            else
-                i--;
+            setPokemonArr((pokemonArr) => [...pokemonArr, pokemonJson]);
         }
+        setPrevCalled(prevArr);
         }
         fetchData();
     }, []);
@@ -56,11 +61,9 @@ function App() {
     useEffect(() => {
         if(typeof faveToAdd === 'undefined')
             return;
-        setFavoriteArr((favoriteArr) => [...favoriteArr, faveToAdd]);
-        let tempArr = pokemonArr;
-        tempArr.splice(tempArr.indexOf(faveToAdd), 1);
-        setPokemonArr(tempArr);
-        console.log('pokemon arr : ' + pokemonArr.length);
+        favoriteArr.push(faveToAdd);
+        pokemonArr.splice(pokemonArr.indexOf(faveToAdd), 1);
+        burpArrays();
     }, [faveToAdd]);
 
     useEffect( () => {
@@ -77,21 +80,25 @@ function App() {
         {
             tempArr.splice(tempArr.indexOf(faveToRemove), 1);
             setPokemonArr(tempArr);
-            console.log('pokemon arr dislike : ' + pokemonArr.length);
         }
+        burpArrays();
     }, [faveToRemove]);
 
     const loadMore = async () => {
+        let prevArr = [...prevCalled];
         for(let i = 1; i <= 3; i++) {
             const id = Math.ceil(Math.random() * 898);
+            if(prevArr.includes(id)){
+                i--;
+                continue;
+            }
+            prevArr.push(id);
             const response = await fetch('https://pokeapi.co/api/v2/pokemon/' + id);
             const pokemonRaw = await response.text();
             const pokemonJson = JSON.parse(pokemonRaw);
-            if(!pokemonArr.includes(pokemonJson))
-                addPokemon(pokemonJson);
-            else
-                i--;
+            setPokemonArr((pokemonArr) => [...pokemonArr, pokemonJson]);
         }
+        setPrevCalled(prevArr);
     };
 
   return (
