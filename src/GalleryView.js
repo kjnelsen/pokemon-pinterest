@@ -4,7 +4,7 @@ const GalleryView = ({pokemonArr, setFaveToAdd, setFaveToRemove}) => {
 
     return (
         <div>
-        <Cards cards={pokemonArr} setFaveToAdd={setFaveToAdd} setFaveToRemove={setFaveToRemove}/>
+            <Cards cards={pokemonArr} setFaveToAdd={setFaveToAdd} setFaveToRemove={setFaveToRemove}/>
         </div>
     )
 };

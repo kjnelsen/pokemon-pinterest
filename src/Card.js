@@ -2,8 +2,8 @@
 const Card = ({pokemon, setFaveToAdd, setFaveToRemove}) => {
 
     const clickDislike = () => {
-    setFaveToRemove(pokemon);
-};
+        setFaveToRemove(pokemon);
+    };
 
     const clickLike = () => {
         setFaveToAdd(pokemon);

@@ -14,49 +14,25 @@ function App() {
     const [faveToRemove, setFaveToRemove] = useState();
     const [prevCalled, setPrevCalled] = useState([]);
 
-    const burpArrays = () => {
-        setFavoriteArr((favoriteArr) => [...favoriteArr]);
-        setPokemonArr((pokemonArr) => [...pokemonArr]);
-    };
-
     useEffect(() => {
         async function fetchData() {
             let prevArr = [...prevCalled];
-        for(let i = 1; i <= 15; i++) {
-            const id = Math.ceil(Math.random() * 898);
-            if(prevArr.includes(id)) {
-                i--;
-                continue;
+            for(let i = 1; i <= 15; i++) {
+                const id = Math.ceil(Math.random() * 898);
+                if(prevArr.includes(id)) {
+                    i--;
+                    continue;
+                }
+                prevArr.push(id);
+                const response = await fetch('https://pokeapi.co/api/v2/pokemon/' + id);
+                const pokemonRaw = await response.text();
+                const pokemonJson = JSON.parse(pokemonRaw);
+                setPokemonArr((pokemonArr) => [...pokemonArr, pokemonJson]);
             }
-            prevArr.push(id);
-            const response = await fetch('https://pokeapi.co/api/v2/pokemon/' + id);
-            const pokemonRaw = await response.text();
-            const pokemonJson = JSON.parse(pokemonRaw);
-            setPokemonArr((pokemonArr) => [...pokemonArr, pokemonJson]);
-        }
-        setPrevCalled(prevArr);
+            setPrevCalled(prevArr);
         }
         fetchData();
     }, []);
-
-
-    const RenderView = () => {
-        if(isFavorite)
-        {
-            return <FavoriteView pokemonArr={favoriteArr} setFaveToRemove={setFaveToRemove}/>
-        }
-        return(
-            <div>
-            <GalleryView pokemonArr={pokemonArr} setFaveToAdd={setFaveToAdd} setFaveToRemove={setFaveToRemove}/>
-            <button onClick={loadMore}>Load More</button>
-            </div>
-
-        )
-    };
-
-    const headerCallback = (childData) => {
-        setIsFavorite(childData);
-    };
 
     useEffect(() => {
         if(typeof faveToAdd === 'undefined')
@@ -99,6 +75,29 @@ function App() {
             setPokemonArr((pokemonArr) => [...pokemonArr, pokemonJson]);
         }
         setPrevCalled(prevArr);
+    };
+
+    const headerCallback = (childData) => {
+        setIsFavorite(childData);
+    };
+
+    const burpArrays = () => {
+        setFavoriteArr((favoriteArr) => [...favoriteArr]);
+        setPokemonArr((pokemonArr) => [...pokemonArr]);
+    };
+
+    const RenderView = () => {
+        if(isFavorite)
+        {
+            return <FavoriteView pokemonArr={favoriteArr} setFaveToRemove={setFaveToRemove}/>
+        }
+        return(
+            <div>
+                <GalleryView pokemonArr={pokemonArr} setFaveToAdd={setFaveToAdd} setFaveToRemove={setFaveToRemove}/>
+                <button onClick={loadMore}>Load More</button>
+            </div>
+
+        )
     };
 
   return (
