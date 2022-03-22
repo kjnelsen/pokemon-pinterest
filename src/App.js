@@ -15,29 +15,15 @@ function App() {
     const [prevCalled, setPrevCalled] = useState([]);
 
     useEffect(() => {
-        async function fetchData() {
-            let prevArr = [...prevCalled];
-            for(let i = 1; i <= 15; i++) {
-                const id = Math.ceil(Math.random() * 898);
-                if(prevArr.includes(id)) {
-                    i--;
-                    continue;
-                }
-                prevArr.push(id);
-                const response = await fetch('https://pokeapi.co/api/v2/pokemon/' + id);
-                const pokemonRaw = await response.text();
-                const pokemonJson = JSON.parse(pokemonRaw);
-                setPokemonArr((pokemonArr) => [...pokemonArr, pokemonJson]);
-            }
-            setPrevCalled(prevArr);
-        }
-        fetchData();
+        loadMore(15);
+        localStorageToArray();
     }, []);
 
     useEffect(() => {
         if(typeof faveToAdd === 'undefined')
             return;
         favoriteArr.push(faveToAdd);
+        localStorage.setItem(faveToAdd.id, JSON.stringify(faveToAdd));
         pokemonArr.splice(pokemonArr.indexOf(faveToAdd), 1);
         burpArrays();
     }, [faveToAdd]);
@@ -51,6 +37,7 @@ function App() {
             tempArr.splice(tempArr.indexOf(faveToRemove), 1);
             setFavoriteArr(tempArr);
         }
+        localStorage.removeItem(faveToRemove.id);
         tempArr = pokemonArr;
         if(tempArr.indexOf(faveToRemove) !== -1)
         {
@@ -60,12 +47,16 @@ function App() {
         burpArrays();
     }, [faveToRemove]);
 
-    const loadMore = async () => {
+    const loadMore = async (numberToLoad) => {
+        let loopBreakout = 0;
         let prevArr = [...prevCalled];
-        for(let i = 1; i <= 3; i++) {
+        for(let i = 1; i <= numberToLoad; i++) {
             const id = Math.ceil(Math.random() * 898);
-            if(prevArr.includes(id)){
+            if(prevArr.includes(id) || localStorage.getItem(id.toString())){
                 i--;
+                loopBreakout++;
+                if(loopBreakout > 20)
+                    break;
                 continue;
             }
             prevArr.push(id);
@@ -86,15 +77,35 @@ function App() {
         setPokemonArr((pokemonArr) => [...pokemonArr]);
     };
 
+    const localStorageToArray = () => {
+        let tempArr = [];
+
+        for(let i = 0; i < localStorage.length; i++)
+        {
+            tempArr.push(JSON.parse(localStorage.getItem(localStorage.key(i))));
+        }
+        setFavoriteArr(tempArr);
+    };
+
+    const clearCache = () => {
+        localStorage.clear();
+        setFavoriteArr([]);
+    }
+
     const RenderView = () => {
         if(isFavorite)
         {
-            return <FavoriteView pokemonArr={favoriteArr} setFaveToRemove={setFaveToRemove}/>
+            return(
+                <div>
+                    <FavoriteView pokemonArr={favoriteArr} setFaveToRemove={setFaveToRemove}/>
+                    <button onClick={clearCache}>Clear</button>
+                </div>
+            )
         }
         return(
             <div>
                 <GalleryView pokemonArr={pokemonArr} setFaveToAdd={setFaveToAdd} setFaveToRemove={setFaveToRemove}/>
-                <button onClick={loadMore}>Load More</button>
+                <button onClick={() => {loadMore(5)}}>Load More</button>
             </div>
 
         )
